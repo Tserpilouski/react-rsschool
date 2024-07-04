@@ -1,0 +1,7 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: blueviolet;
+  height: 10rem;
+  width: 5rem;
+}
