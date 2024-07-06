@@ -1,0 +1,30 @@
+#root {
+  width: 1280px;
+  height: 100vh;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.topOne {
+  height: 20rem;
+  width: 100%;
+  background-color: bisque;
+  color: black;
+}
+
+.bottomOne {
+  height: 100%;
+  color: black;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardbox {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
