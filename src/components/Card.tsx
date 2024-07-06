@@ -1,12 +1,18 @@
 import { Component } from 'react';
 import styles from './card.module.css';
 
-class Card extends Component {
+interface CardProps {
+  name: string;
+  gender: string;
+}
+
+class Card extends Component<CardProps> {
   render() {
+    const { name, gender } = this.props;
     return (
       <div className={styles.card}>
-        <span>Hello</span>
-        <p>Some tekst</p>
+        <span>Name: {name}</span>
+        <span>Gender: {gender}</span>
       </div>
     );
   }

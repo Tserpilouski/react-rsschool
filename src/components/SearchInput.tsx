@@ -1,42 +1,24 @@
 import React, { Component } from 'react';
 
-interface SearchInputState {
-  search: string;
+interface SearchInputProps {
+  onSearchChange: (search: string) => void;
+  onSearchSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  searchValue: string;
 }
 
-class SearchInput extends Component<object, SearchInputState> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      search: '',
-    };
-  }
-
-  componentDidMount() {
-    const savedSearch = localStorage.getItem('search');
-    if (savedSearch) {
-      this.setState({ search: savedSearch });
-    }
-  }
-
+class SearchInput extends Component<SearchInputProps> {
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    this.setState({ search: value });
-  };
-
-  handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log(this.state.search);
-    localStorage.setItem('search', this.state.search);
+    this.props.onSearchChange(value);
   };
 
   render() {
     return (
       <>
-        <form onSubmit={this.handleSubmit}>
+        <form onSubmit={this.props.onSearchSubmit}>
           <input
             type="text"
-            value={this.state.search}
+            value={this.props.searchValue}
             onChange={this.handleChange}
           />
           <button type="submit">Search</button>

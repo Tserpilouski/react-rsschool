@@ -1,7 +1,11 @@
 .card {
   display: flex;
   flex-direction: column;
-  background-color: blueviolet;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgb(219, 180, 255);
   height: 10rem;
-  width: 5rem;
+  width: 10rem;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
 }
