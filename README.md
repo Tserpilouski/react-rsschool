@@ -1,1 +1,2 @@
-# react-rsschool
+Check the other branches for more information.
+:)
