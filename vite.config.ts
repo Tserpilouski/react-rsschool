@@ -5,6 +5,7 @@ import path from 'path';
 const ReactCompilerConfig = {
   runtimeModule: '@/mycache',
 };
+declare const __dirname: string;
 
 export default defineConfig({
   resolve: {
