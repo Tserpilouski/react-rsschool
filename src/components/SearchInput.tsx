@@ -1,31 +1,28 @@
-import React, { Component } from 'react';
+import React from 'react';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 interface SearchInputProps {
-  onSearchChange: (search: string) => void;
-  onSearchSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  searchValue: string;
+  onSearchSubmit: (searchText: string) => void;
 }
 
-class SearchInput extends Component<SearchInputProps> {
-  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    this.props.onSearchChange(value);
+const SearchInput: React.FC<SearchInputProps> = ({ onSearchSubmit }) => {
+  const [valueLS, setValueLS] = useLocalStorage('searchValue', '');
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    onSearchSubmit(valueLS);
   };
 
-  render() {
-    return (
-      <>
-        <form onSubmit={this.props.onSearchSubmit}>
-          <input
-            type="text"
-            value={this.props.searchValue}
-            onChange={this.handleChange}
-          />
-          <button type="submit">Search</button>
-        </form>
-      </>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={valueLS}
+        onChange={(e) => setValueLS(e.target.value)}
+      />
+      <button type="submit">Search</button>
+    </form>
+  );
+};
 
 export default SearchInput;

@@ -1,98 +1,66 @@
-import React, { Component } from 'react';
+import { useEffect, useState } from 'react';
 import SearchInput from '../components/SearchInput';
-import Card from '../components/Card';
-import Loader from '../components/Loader';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import Card from '../components/card/Card';
+import Loader from '../components/loader/Loader';
 import { fetchSearchResults } from '../services/api';
 
-interface HomeState {
-  searchValue: string;
-  results: { name: string; gender: string }[];
-  isLoading: boolean;
-  throwError: boolean;
+interface ResultItem {
+  name: string;
+  gender: string;
 }
 
-class Home extends Component<object, HomeState> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      searchValue: '',
-      results: [],
-      isLoading: false,
-      throwError: false,
-    };
-  }
+const Home: React.FC = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [result, setResult] = useState<ResultItem[]>([]);
+  const [valueLS, setValueLS] = useLocalStorage('searchValue', '');
 
-  componentDidMount() {
-    const searchValue = localStorage.getItem('search') || '';
-    this.setState({ searchValue }, () => {
-      this.performSearch(searchValue);
-    });
-  }
+  const handleSubmit = (searchText: string) => {
+    setValueLS(searchText);
+    performSearch(searchText);
+  };
 
-  performSearch = async (searchValue: string) => {
-    this.setState({ isLoading: true });
+  const performSearch = async (searchValue: string) => {
+    setIsLoading(true);
     try {
       const response = await fetchSearchResults(searchValue);
       const results = response.results;
       if (Array.isArray(results)) {
-        this.setState({ results });
+        setResult(results);
       } else {
         console.error('Expected array but got:', results);
       }
     } catch (error) {
       console.error('Failed to fetch items:', error);
     } finally {
-      this.setState({ isLoading: false });
+      setIsLoading(false);
     }
   };
 
-  handleSearchChange = (search: string) => {
-    this.setState({ searchValue: search });
-  };
+  useEffect(() => {
+    performSearch(valueLS);
+  }, [valueLS]);
 
-  handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const { searchValue } = this.state;
-    localStorage.setItem('search', searchValue);
-    this.performSearch(searchValue);
-  };
-
-  handleThrowError = () => {
-    this.setState({ throwError: true });
-  };
-
-  render() {
-    if (this.state.throwError) {
-      throw new Error('Test error thrown');
-    }
-    return (
-      <>
-        <div className="topOne">
-          <h1>Top one</h1>
-          <SearchInput
-            onSearchChange={this.handleSearchChange}
-            onSearchSubmit={this.handleSubmit}
-            searchValue={this.state.searchValue}
-          />
-          <button onClick={this.handleThrowError}>Throw Error</button>
+  return (
+    <>
+      <div className="topOne">
+        <SearchInput onSearchSubmit={handleSubmit} />
+      </div>
+      <div className="bottomOne">
+        <div className="cardbox">
+          {isLoading ? (
+            <Loader />
+          ) : result.length > 0 ? (
+            result.map((result, index) => (
+              <Card key={index} name={result.name} gender={result.gender} />
+            ))
+          ) : (
+            <p>No results found.</p>
+          )}
         </div>
-        <div className="bottomOne">
-          <h2>Second one</h2>
-          <div className="cardbox">
-            {this.state.isLoading ? (
-              <Loader />
-            ) : this.state.results.length > 0 ? (
-              this.state.results.map((result, index) => (
-                <Card key={index} name={result.name} gender={result.gender} />
-              ))
-            ) : (
-              <p>No results found.</p>
-            )}
-          </div>
-        </div>
-      </>
-    );
-  }
-}
+      </div>
+    </>
+  );
+};
 
 export default Home;
