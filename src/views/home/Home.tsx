@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import SearchInput from '../components/SearchInput';
-import { useLocalStorage } from '../hooks/useLocalStorage';
-import Card from '../components/card/Card';
-import Loader from '../components/loader/Loader';
-import { fetchSearchResults } from '../services/api';
+
+import SearchInput from '../../components/searchInput/SearchInput';
+import Card from '../../components/card/Card';
+import Loader from '../../components/loader/Loader';
+
+import { useLocalStorage } from '../../utils/useLocalStorage';
+import { fetchSearchResults } from '../../api/api';
+
+import styles from './home.module.scss';
 
 interface ResultItem {
   name: string;
@@ -43,21 +47,20 @@ const Home: React.FC = () => {
 
   return (
     <>
-      <div className="topOne">
+      <div className={styles.topblock}>
         <SearchInput onSearchSubmit={handleSubmit} />
       </div>
-      <div className="bottomOne">
-        <div className="cardbox">
-          {isLoading ? (
-            <Loader />
-          ) : result.length > 0 ? (
-            result.map((result, index) => (
-              <Card key={index} name={result.name} gender={result.gender} />
-            ))
-          ) : (
-            <p>No results found.</p>
-          )}
-        </div>
+      <hr />
+      <div className={styles.bottomblock}>
+        {isLoading ? (
+          <Loader />
+        ) : result.length > 0 ? (
+          result.map((result, index) => (
+            <Card key={index} name={result.name} gender={result.gender} />
+          ))
+        ) : (
+          <p>No results found.</p>
+        )}
       </div>
     </>
   );

@@ -1,5 +1,7 @@
 import React from 'react';
-import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useLocalStorage } from '../../utils/useLocalStorage';
+
+import styles from './searchinput.module.scss';
 
 interface SearchInputProps {
   onSearchSubmit: (searchText: string) => void;
@@ -16,11 +18,14 @@ const SearchInput: React.FC<SearchInputProps> = ({ onSearchSubmit }) => {
   return (
     <form onSubmit={handleSubmit}>
       <input
+        className={styles.inputc}
         type="text"
         value={valueLS}
         onChange={(e) => setValueLS(e.target.value)}
       />
-      <button type="submit">Search</button>
+      <button className={styles.buttonc} type="submit">
+        Search
+      </button>
     </form>
   );
 };

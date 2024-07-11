@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './card.module.css';
+import style from './card.module.scss';
 
 interface CardProps {
   name: string;
@@ -8,7 +8,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ name, gender }) => {
   return (
-    <div className={styles.card}>
+    <div className={style.card}>
       <span>Name: {name}</span>
       <span>Gender: {gender}</span>
     </div>
