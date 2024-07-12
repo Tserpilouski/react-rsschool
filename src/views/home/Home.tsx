@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import SearchInput from '../../components/searchInput/SearchInput';
 import Card from '../../components/card/Card';
@@ -7,33 +7,32 @@ import Loader from '../../components/loader/Loader';
 import { useLocalStorage } from '../../utils/useLocalStorage';
 import { fetchSearchResults } from '../../api/api';
 
-import styles from './home.module.scss';
+import { CardInfo } from './Home.types';
 
-interface ResultItem {
-  name: string;
-  gender: string;
-}
+import styles from './home.module.scss';
 
 const Home: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [result, setResult] = useState<ResultItem[]>([]);
+  const [result, setResult] = useState<CardInfo[]>([]);
   const [valueLS, setValueLS] = useLocalStorage('searchValue', '');
+  const [nextPage, setNextPage] = useState<string | null>(null);
+  const [prevPage, setPrevPage] = useState<string | null>(null);
 
   const handleSubmit = (searchText: string) => {
     setValueLS(searchText);
-    performSearch(searchText);
   };
 
-  const performSearch = async (searchValue: string) => {
+  const performSearch = async (
+    query: string,
+    next: string | null,
+    prev: string | null
+  ) => {
     setIsLoading(true);
     try {
-      const response = await fetchSearchResults(searchValue);
-      const results = response.results;
-      if (Array.isArray(results)) {
-        setResult(results);
-      } else {
-        console.error('Expected array but got:', results);
-      }
+      const response = await fetchSearchResults(query, next, prev);
+      setResult(response.results);
+      setNextPage(response.next);
+      setPrevPage(response.previous);
     } catch (error) {
       console.error('Failed to fetch items:', error);
     } finally {
@@ -41,8 +40,16 @@ const Home: React.FC = () => {
     }
   };
 
+  const goToNextPage = () => {
+    performSearch(valueLS, nextPage, null);
+  };
+
+  const goToPrevPage = () => {
+    performSearch(valueLS, null, prevPage);
+  };
+
   useEffect(() => {
-    performSearch(valueLS);
+    performSearch(valueLS, nextPage, prevPage);
   }, [valueLS]);
 
   return (
@@ -55,12 +62,24 @@ const Home: React.FC = () => {
         {isLoading ? (
           <Loader />
         ) : result.length > 0 ? (
-          result.map((result, index) => (
-            <Card key={index} name={result.name} gender={result.gender} />
-          ))
+          <div className={styles.gridBox}>
+            {result.map((character, index) => (
+              <div key={index} className={styles.gridItem}>
+                <Card cardInfo={character} />
+              </div>
+            ))}
+          </div>
         ) : (
           <p>No results found.</p>
         )}
+      </div>
+      <div className={styles.pagination}>
+        <button onClick={goToPrevPage} disabled={!prevPage}>
+          Previous
+        </button>
+        <button onClick={goToNextPage} disabled={!nextPage}>
+          Next
+        </button>
       </div>
     </>
   );

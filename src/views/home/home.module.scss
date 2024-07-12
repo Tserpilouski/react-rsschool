@@ -13,3 +13,18 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+
+.gridBox {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  grid-row-gap: 2em;
+  margin-bottom: 2em;
+}
+
+.gridItem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

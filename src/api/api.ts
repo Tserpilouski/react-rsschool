@@ -1,13 +1,25 @@
-export const fetchSearchResults = async (query: string) => {
+export const fetchSearchResults = async (
+  query: string,
+  next: string | null,
+  prev: string | null
+) => {
   try {
-    const url = query
-      ? `https://swapi.dev/api/people/?search=${query}`
-      : `https://swapi.dev/api/people/`;
+    let url = 'https://swapi.dev/api/people/';
+
+    if (query) {
+      url += `?search=${query}`;
+    } else if (next) {
+      url = next;
+    } else if (prev) {
+      url = prev;
+    }
 
     const response = await fetch(url);
+
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
+
     const data = await response.json();
     return data;
   } catch (error) {
