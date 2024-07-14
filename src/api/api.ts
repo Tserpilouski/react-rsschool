@@ -1,21 +1,30 @@
-export const fetchSearchResults = async (
-  query: string,
-  next: string | null,
-  prev: string | null
-) => {
-  try {
-    let url = 'https://swapi.dev/api/people/';
+export const getAllPersons = async (search: string | null, page: string) => {
+  let url = `https://swapi.dev/api/people/`;
 
-    if (query) {
-      url += `?search=${query}`;
-    } else if (next) {
-      url = next;
-    } else if (prev) {
-      url = prev;
+  if (search && page) {
+    url = `${url}?search=${search}&page=${page}`;
+  } else {
+    url = `${url}?page=${page}`;
+  }
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
 
-    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Failed to fetch search results:', error);
+    throw error;
+  }
+};
 
+export const getPerson = async (id: string) => {
+  try {
+    const url = `https://swapi.dev/api/people/${id}/`;
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

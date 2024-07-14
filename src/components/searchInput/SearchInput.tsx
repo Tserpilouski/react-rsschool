@@ -1,32 +1,34 @@
-import React from 'react';
-import { useLocalStorage } from '../../utils/useLocalStorage';
-
 import styles from './searchinput.module.scss';
 
-interface SearchInputProps {
-  onSearchSubmit: (searchText: string) => void;
-}
+import React, { ChangeEvent } from 'react';
 
-const SearchInput: React.FC<SearchInputProps> = ({ onSearchSubmit }) => {
-  const [valueLS, setValueLS] = useLocalStorage('searchValue', '');
+import { useLocalStorage } from '../../utils/useLocalStorage';
+import { useSearchParams } from 'react-router-dom';
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    onSearchSubmit(valueLS);
+const SearchInput: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [inputValue, setInputValue] = useLocalStorage('value', '');
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleClick = () => {
+    const page = searchParams.get('page');
+    console.log(page);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div className={styles.topblock}>
       <input
         className={styles.inputc}
-        type="text"
-        value={valueLS}
-        onChange={(e) => setValueLS(e.target.value)}
+        type="search"
+        value={inputValue}
+        onChange={handleInputChange}
       />
-      <button className={styles.buttonc} type="submit">
+      <button className={styles.buttonc} onClick={handleClick}>
         Search
       </button>
-    </form>
+    </div>
   );
 };
 

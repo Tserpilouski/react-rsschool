@@ -1,71 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-interface Character {
-  name: string;
-  gender: string;
-}
+import styles from './pagination.module.scss';
 
-interface SWAPIResponse {
-  count: number;
+interface Props {
   next: string | null;
   previous: string | null;
-  results: Character[];
 }
 
-const Pagination: React.FC = () => {
-  const [characters, setCharacters] = useState<Character[]>([]);
-  const [nextPage, setNextPage] = useState<string | null>(null);
-  const [prevPage, setPrevPage] = useState<string | null>(null);
+const Pagination: React.FC<Props> = ({ next, previous }) => {
+  const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    fetchData('https://swapi.dev/api/people/');
-  }, []);
-
-  const fetchData = async (url: string) => {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data: SWAPIResponse = await response.json();
-      setCharacters(data.results);
-      setNextPage(data.next);
-      setPrevPage(data.previous);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+  const goToPrevPage = () => {
+    if (previous != null) {
+      setCurrentPage((prev) => prev - 1);
     }
   };
 
   const goToNextPage = () => {
-    if (nextPage) {
-      fetchData(nextPage);
-    }
-  };
-
-  const goToPrevPage = () => {
-    if (prevPage) {
-      fetchData(prevPage);
+    if (next != null) {
+      setCurrentPage((prev) => prev + 1);
     }
   };
 
   return (
-    <div>
-      <h2>Star Wars Characters</h2>
-      <ul>
-        {characters.map((character, index) => (
-          <li key={index}>
-            {character.name} - {character.gender}
-          </li>
-        ))}
-      </ul>
-      <div>
-        <button onClick={goToPrevPage} disabled={!prevPage}>
-          Previous
-        </button>
-        <button onClick={goToNextPage} disabled={!nextPage}>
-          Next
-        </button>
-      </div>
+    <div className={styles.box}>
+      <button
+        className={styles.btn}
+        onClick={goToPrevPage}
+        disabled={!previous}
+      >
+        prev
+      </button>
+      <span>Page {currentPage}</span>
+      <button className={styles.btn} onClick={goToNextPage} disabled={!next}>
+        next
+      </button>
     </div>
   );
 };
