@@ -1,0 +1,12 @@
+@import '../../assets/styles/variables.scss';
+
+.card {
+  display: flex;
+  flex-direction: column;
+  width: 20rem;
+  border: 0.2rem solid $border-color-yellow;
+  height: 20rem;
+  padding: 1rem;
+  position: sticky;
+  top: 10rem;
+}

@@ -3,43 +3,84 @@ import Card from '../card/Card';
 import Pagination from '../pagination/Pagination';
 
 import styles from './searchResult.module.scss';
-import { getAllPersons } from '../../api/api';
-import { Data } from '../../views/home/Home.types';
+import { getApi } from '../../api/api';
+import { PersonInfo } from '../../views/home/Home.types';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
 const SearchResult: React.FC = () => {
-  const [data, setData] = useState<Data>();
-  const [isLoading, setIsLoading] = useState(true);
+  const { pathname } = useLocation();
+  const [data, setData] = useState<PersonInfo[]>([]);
+  const [next, setNext] = useState<string | null>(null);
+  const [previous, setPrevious] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadData = async () => {
+      setIsLoading(true);
       try {
-        const results = await getAllPersons('l', '1');
-        setData(results);
-        setIsLoading(false);
+        const search = searchParams.get('search') || '';
+        const page = searchParams.get('page') || '1';
+        setCurrentPage(Number(page));
+        const response = await getApi(search, page);
+        setData(response.results);
+        setNext(response.next);
+        setPrevious(response.previous);
       } catch (error) {
-        console.error('Failed to fetch search results:', error);
+        console.error('Ошибка при загрузке данных:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
+    loadData();
+  }, [searchParams]);
 
-    fetchData();
-  }, []);
-  console.log(data);
+  const goToPrevPage = () => {
+    if (previous != null) {
+      setCurrentPage((prev) => prev - 1);
+      updatePageParams(currentPage - 1);
+    }
+  };
 
-  if (isLoading) {
-    return <p>Loading...</p>;
+  const goToNextPage = () => {
+    if (next != null) {
+      setCurrentPage((prev) => prev + 1);
+      updatePageParams(currentPage + 1);
+    }
+  };
+
+  function updatePageParams(page: number) {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', page.toString());
+    setSearchParams(params);
   }
 
   return (
-    <div className={styles.bottomblock}>
-      <div className={styles.gridBox}>
-        {data.map((character, index) => (
-          <div key={index} className={styles.gridItem}>
-            <Card cardInfo={character} />
+    <>
+      {isLoading === true ? (
+        <div>
+          <h1>Loading....</h1>
+        </div>
+      ) : (
+        <div className={styles.bottomblock}>
+          <div
+            className={pathname != '/' ? styles.gridBoxDetail : styles.gridBox}
+          >
+            {data.map((character, index) => (
+              <div key={index} className={styles.gridItem}>
+                <Card cardInfo={character} />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      <Pagination next={data.next} previous={data.previous} />
-    </div>
+          <Pagination
+            next={goToNextPage}
+            previous={goToPrevPage}
+            currentPage={currentPage}
+          />
+        </div>
+      )}
+    </>
   );
 };
 

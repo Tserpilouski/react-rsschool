@@ -21,7 +21,7 @@ export type Data = {
   count: number;
   next: string | null;
   previous: string | null;
-  results: PersonInfo[];
+  results: PersonInfo[] | [];
 };
 
 export type LoaderData = {

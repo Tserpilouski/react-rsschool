@@ -1,38 +1,34 @@
-export const getAllPersons = async (search: string | null, page: string) => {
-  let url = `https://swapi.dev/api/people/`;
+import { Data, PersonInfo } from '../views/home/Home.types';
 
-  if (search && page) {
-    url = `${url}?search=${search}&page=${page}`;
-  } else {
-    url = `${url}?page=${page}`;
-  }
-
+export async function getApi(search: string, page: string): Promise<Data> {
+  const url = `https://swapi.dev/api/people/?search=${search}&page=${page}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error(`Response status: ${response.status}`);
     }
-
-    const data = await response.json();
-    return data;
+    const json = await response.json();
+    const { count, next, previous, results } = json;
+    return { count, next, previous, results };
   } catch (error) {
-    console.error('Failed to fetch search results:', error);
+    console.error(error);
     throw error;
   }
-};
+}
 
-export const getPerson = async (id: string) => {
+export async function getApiPerson(
+  id: string | undefined
+): Promise<PersonInfo> {
+  const url = `https://swapi.dev/api/people/${id}/`;
   try {
-    const url = `https://swapi.dev/api/people/${id}/`;
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      throw new Error(`Response status: ${response.status}`);
     }
-
-    const data = await response.json();
-    return data;
+    const json = await response.json();
+    return json;
   } catch (error) {
-    console.error('Failed to fetch search results:', error);
+    console.error(error);
     throw error;
   }
-};
+}

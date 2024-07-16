@@ -2,22 +2,26 @@ import React from 'react';
 import style from './card.module.scss';
 
 import { PersonInfo } from '../../views/home/Home.types';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { getNavigatedUrl } from '../../utils/getNavigatedUrl';
 
 interface CardProps {
   cardInfo: PersonInfo;
 }
 
 const Card: React.FC<CardProps> = ({ cardInfo }) => {
+  const navigate = useNavigate();
   const id = extractIdFromUrl(cardInfo.url);
-  const page = useParams();
+  const [searchParams] = useSearchParams();
 
   function extractIdFromUrl(url: string): string {
     const parts = url.split('/');
     return parts[parts.length - 2];
   }
+
   const handleClick = () => {
-    console.log(page);
+    const url = getNavigatedUrl(searchParams, id);
+    navigate(url);
   };
 
   return (

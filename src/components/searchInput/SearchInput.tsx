@@ -8,13 +8,16 @@ import { useSearchParams } from 'react-router-dom';
 const SearchInput: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [inputValue, setInputValue] = useLocalStorage('value', '');
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
 
   const handleClick = () => {
-    const page = searchParams.get('page');
-    console.log(page);
+    const params = new URLSearchParams(searchParams);
+    params.set('search', inputValue);
+    params.set('page', '1');
+    setSearchParams(params);
   };
 
   return (

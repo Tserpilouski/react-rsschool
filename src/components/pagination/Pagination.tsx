@@ -1,38 +1,20 @@
-import React, { useState } from 'react';
-
+import React from 'react';
 import styles from './pagination.module.scss';
 
 interface Props {
-  next: string | null;
-  previous: string | null;
+  next: () => void;
+  previous: () => void;
+  currentPage: number;
 }
 
-const Pagination: React.FC<Props> = ({ next, previous }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-
-  const goToPrevPage = () => {
-    if (previous != null) {
-      setCurrentPage((prev) => prev - 1);
-    }
-  };
-
-  const goToNextPage = () => {
-    if (next != null) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  };
-
+const Pagination: React.FC<Props> = ({ next, previous, currentPage }) => {
   return (
     <div className={styles.box}>
-      <button
-        className={styles.btn}
-        onClick={goToPrevPage}
-        disabled={!previous}
-      >
+      <button className={styles.btn} onClick={previous}>
         prev
       </button>
       <span>Page {currentPage}</span>
-      <button className={styles.btn} onClick={goToNextPage} disabled={!next}>
+      <button className={styles.btn} onClick={next}>
         next
       </button>
     </div>
