@@ -1,3 +1,4 @@
+import React from 'react';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { getApiPerson } from '../../api/api';

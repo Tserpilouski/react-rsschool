@@ -15,7 +15,11 @@ const SearchInput: React.FC = () => {
 
   const handleClick = () => {
     const params = new URLSearchParams(searchParams);
-    params.set('search', inputValue);
+    if (inputValue !== '') {
+      params.set('search', inputValue);
+    } else {
+      params.delete('search'); // Удаляем параметр search, если inputValue пусто
+    }
     params.set('page', '1');
     setSearchParams(params);
   };
