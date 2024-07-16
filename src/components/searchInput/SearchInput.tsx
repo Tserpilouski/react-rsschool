@@ -18,7 +18,7 @@ const SearchInput: React.FC = () => {
     if (inputValue !== '') {
       params.set('search', inputValue);
     } else {
-      params.delete('search'); // Удаляем параметр search, если inputValue пусто
+      params.delete('search');
     }
     params.set('page', '1');
     setSearchParams(params);
