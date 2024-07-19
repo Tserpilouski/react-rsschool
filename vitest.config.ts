@@ -16,6 +16,8 @@ export default defineConfig({
         '**/*.d.ts',
         '**/*.interface.ts',
         '**/*.constants.ts',
+        '**/*.test.tsx',
+        '**/*.test.ts',
       ],
     },
   },
