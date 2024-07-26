@@ -1,11 +1,13 @@
-import styles from './searchinput.module.scss';
-
 import React, { ChangeEvent } from 'react';
-
-import { useLocalStorage } from '../../utils/useLocalStorage';
 import { useSearchParams } from 'react-router-dom';
 
+import { useLocalStorage } from '../../utils/useLocalStorage';
+
+import styles from './searchinput.module.scss';
+import { useTheme } from '../../utils/useTheme';
+
 const SearchInput: React.FC = () => {
+  const { theme, setTheme } = useTheme();
   const [searchParams, setSearchParams] = useSearchParams();
   const [inputValue, setInputValue] = useLocalStorage('value', '');
 
@@ -13,7 +15,7 @@ const SearchInput: React.FC = () => {
     setInputValue(e.target.value);
   };
 
-  const handleClick = () => {
+  const handleSearch = () => {
     const params = new URLSearchParams(searchParams);
     if (inputValue !== '') {
       params.set('search', inputValue);
@@ -32,9 +34,14 @@ const SearchInput: React.FC = () => {
         value={inputValue}
         onChange={handleInputChange}
       />
-      <button className={styles.buttonc} onClick={handleClick}>
+      <button className={styles.buttonc} onClick={handleSearch}>
         Search
       </button>
+      <div>
+        <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+          {theme === 'light' ? 'dark' : 'light'}
+        </button>
+      </div>
     </div>
   );
 };

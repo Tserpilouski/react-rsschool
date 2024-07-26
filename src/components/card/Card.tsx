@@ -1,9 +1,11 @@
 import React from 'react';
-import style from './card.module.scss';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import { PersonInfo } from '../../views/home/Home.types';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getNavigatedUrl } from '../../utils/getNavigatedUrl';
+import { useTheme } from '../../utils/useTheme';
+
+import style from './card.module.scss';
 
 interface CardProps {
   cardInfo: PersonInfo;
@@ -13,6 +15,9 @@ const Card: React.FC<CardProps> = ({ cardInfo }) => {
   const navigate = useNavigate();
   const id = extractIdFromUrl(cardInfo.url);
   const [searchParams] = useSearchParams();
+  const { theme } = useTheme();
+
+  const cardTheme = theme === 'light' ? `${style.light}` : '';
 
   function extractIdFromUrl(url: string): string {
     const parts = url.split('/');
@@ -25,7 +30,7 @@ const Card: React.FC<CardProps> = ({ cardInfo }) => {
   };
 
   return (
-    <div className={style.card} onClick={handleClick}>
+    <div className={`${style.card} ${cardTheme}`} onClick={handleClick}>
       <img
         className={style.img}
         src={`/people/${id}.jpg`}

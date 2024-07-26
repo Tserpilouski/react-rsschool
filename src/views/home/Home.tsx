@@ -7,7 +7,7 @@ import styles from './home.module.scss';
 
 const Home: React.FC = () => {
   return (
-    <div>
+    <div className={styles.box}>
       <SearchInput />
       <hr />
       <div className={styles.content} data-testid="content">

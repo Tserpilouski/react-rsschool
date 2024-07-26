@@ -59,11 +59,11 @@ const SearchResult: React.FC = () => {
   return (
     <>
       {isLoading === true ? (
-        <div>
+        <div className={styles.bottomblock__width}>
           <h1>Loading....</h1>
         </div>
       ) : (
-        <div className={styles.bottomblock}>
+        <div className={styles.bottomblock__width}>
           <div
             className={pathname != '/' ? styles.gridBoxDetail : styles.gridBox}
           >
