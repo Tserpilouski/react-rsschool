@@ -1,3 +1,4 @@
+import React from 'react';
 import { useRouteError } from 'react-router-dom';
 import { isRouteErrorResponse } from 'react-router-dom';
 
@@ -13,7 +14,7 @@ function ErrorPage() {
       </div>
     );
   } else {
-    return <div>Oops</div>;
+    return <div>Oops!</div>;
   }
 }
 

@@ -1,18 +1,18 @@
 import React from 'react';
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { RefObject, useRef } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { getApiPerson } from '../../api/api';
-import { PersonInfo } from '../../views/home/Home.types';
 import useClickOutside from '../../utils/useClickOutside';
 
 import style from './carddetail.module.scss';
+import { starwarsApi } from '../../service/starwars';
 
 const CardDetail = () => {
   const navigate = useNavigate();
   const { search } = useLocation();
   const { card } = useParams<string>();
-  const [detail, setDetail] = useState<PersonInfo | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const cardId = card || '';
+  const { data, isLoading, isFetching } =
+    starwarsApi.useGetPersonByIdQuery(cardId);
   const wrap: RefObject<HTMLDivElement> = useRef(null);
 
   const handleClickOutside = (): void => {
@@ -21,35 +21,20 @@ const CardDetail = () => {
 
   useClickOutside(wrap, handleClickOutside);
 
-  useEffect(() => {
-    const getPersonInfo = async () => {
-      try {
-        setIsLoading(true);
-        const person = await getApiPerson(card);
-        setDetail(person);
-      } catch (error) {
-        console.error('Ошибка при загрузке данных:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    getPersonInfo();
-  }, [card]);
-
   return (
     <>
-      {isLoading === true ? (
+      {isLoading && isFetching ? (
         <div className={style.card}>
           <h1>Loading....</h1>
         </div>
       ) : (
         <div ref={wrap} className={style.card}>
           <button onClick={handleClickOutside}>Close</button>
-          <h2>{detail?.name}</h2>
-          <span>Year: {detail?.birth_year}</span>
-          <span>Eye color: {detail?.eye_color}</span>
-          <span>Mass: {detail?.mass}</span>
-          <span>Height: {detail?.height}</span>
+          <h2>{data?.name}</h2>
+          <span>Year: {data?.birth_year}</span>
+          <span>Eye color: {data?.eye_color}</span>
+          <span>Mass: {data?.mass}</span>
+          <span>Height: {data?.height}</span>
         </div>
       )}
     </>

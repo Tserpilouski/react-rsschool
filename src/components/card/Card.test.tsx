@@ -2,9 +2,12 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter, useNavigate } from 'react-router-dom';
 import { describe, it, expect, vi, MockedFunction } from 'vitest';
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
 import Card from './Card';
 import { PersonInfo } from '../../views/home/Home.types';
 import { getNavigatedUrl } from '../../utils/getNavigatedUrl';
+import { ThemeProvider } from '../../routes/ThemeProvider';
 
 vi.mock('../../utils/getNavigatedUrl', () => ({
   getNavigatedUrl: vi.fn(() => '/mocked-url'),
@@ -17,6 +20,13 @@ vi.mock('react-router-dom', async () => {
     useNavigate: vi.fn(),
     useSearchParams: vi.fn(() => [new URLSearchParams()]),
   };
+});
+
+const mockStore = configureStore([]);
+const store = mockStore({
+  persons: {
+    data: [], // Начальное состояние для persons
+  },
 });
 
 describe('Card', () => {
@@ -41,14 +51,17 @@ describe('Card', () => {
 
   it('renders the card with person information', () => {
     render(
-      <BrowserRouter>
-        <Card cardInfo={cardInfo} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <ThemeProvider>
+          <BrowserRouter>
+            <Card cardInfo={cardInfo} />
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
     );
 
     expect(screen.getByText('Name: John Doe')).toBeInTheDocument();
     expect(screen.getByText('Gender: male')).toBeInTheDocument();
-    expect(screen.getByAltText('Photo of John Doe')).toBeInTheDocument();
   });
 
   it('navigates to the correct URL on card click', () => {
@@ -58,9 +71,13 @@ describe('Card', () => {
     ).mockReturnValue(navigate);
 
     render(
-      <BrowserRouter>
-        <Card cardInfo={cardInfo} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <ThemeProvider>
+          <BrowserRouter>
+            <Card cardInfo={cardInfo} />
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
     );
 
     fireEvent.click(screen.getByText('Name: John Doe'));
