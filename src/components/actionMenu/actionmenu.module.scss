@@ -1,0 +1,30 @@
+@import '../../assets//styles//variables.scss';
+
+.container {
+  position: fixed;
+  left: 50%;
+  bottom: 5rem;
+  transform: translateX(-50%);
+  padding: 1rem;
+  background-color: $blue;
+  border-radius: 1rem;
+  z-index: 1000;
+  animation-duration: 0.5s;
+  animation-timing-function: ease-in-out;
+
+  & > *:not(:last-child) {
+    margin-right: 1rem;
+  }
+}
+
+.btnDownload {
+  border: none;
+  padding: 0.5rem;
+  background-color: $green-dark;
+  color: $white;
+
+  &:hover {
+    cursor: pointer;
+    background-color: $green-light;
+  }
+}
