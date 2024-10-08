@@ -1,0 +1,43 @@
+@import '../../assets//styles//variables.scss';
+
+.topblock {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 10em;
+  width: 100%;
+}
+
+.input {
+  width: 15em;
+  height: 2em;
+  border-top-left-radius: 1em;
+  border-bottom-left-radius: 1em;
+  font-size: 2em;
+  border: 0.1em solid rgb(22, 22, 80);
+  background-color: $purple;
+  padding-left: 1em;
+}
+
+.input:hover {
+  border: 0.1em solid $border-color-blue;
+}
+
+.button {
+  padding: 0.5em;
+  font-size: 2em;
+  border-top-right-radius: 1em;
+  border-bottom-right-radius: 1em;
+  background-color: rgb(22, 22, 80);
+  border-left: 0.2em solid $border-color-red;
+  border-bottom: none;
+  border-top: none;
+  border-right: none;
+}
+
+.button:hover {
+  cursor: pointer;
+  background-color: $blue;
+  color: $red;
+}
