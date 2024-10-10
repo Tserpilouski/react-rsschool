@@ -63,7 +63,7 @@ class Home extends Component<object, HomeState> {
 
   render() {
     if (this.state.throwError) {
-      throw new Error('Test error thrown');
+      throw new Error('Test error');
     }
     return (
       <>
