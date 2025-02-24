@@ -2,7 +2,8 @@
 import React, { useContext } from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { ThemeProvider, ThemeContext } from './ThemeProvider';
+import { ThemeProvider } from './ThemeProvider';
+import { ThemeContext } from './ThemeContext';
 import { ThemeContextProps } from '../views/home/Home.types';
 
 const TestComponent: React.FC = () => {
