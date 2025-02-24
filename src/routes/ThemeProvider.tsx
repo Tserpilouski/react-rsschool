@@ -1,9 +1,6 @@
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import { ThemeContextProps, Theme } from '../views/home/Home.types';
-
-export const ThemeContext = createContext<ThemeContextProps | undefined>(
-  undefined
-);
+import React, { useState, useEffect, ReactNode } from 'react';
+import { ThemeContext } from './ThemeContext';
+import { Theme } from '../views/home/Home.types';
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   children,

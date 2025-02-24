@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ThemeContext } from '../routes/ThemeProvider';
+import { ThemeContext } from '../routes/ThemeContext';
 import { ThemeContextProps } from '../views/home/Home.types';
 
 export const useTheme = (): ThemeContextProps => {
